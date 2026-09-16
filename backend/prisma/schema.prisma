@@ -45,9 +45,10 @@ model Service {
 }
 
 model Registration {
-  id          Int      @id @default(autoincrement())
-  customerId  Int
-  confirmedAt DateTime @default(now())
+  id            Int      @id @default(autoincrement())
+  customerId    Int
+  attendanceAt  DateTime
+  confirmedAt   DateTime @default(now())
 
   productSubtotal Decimal @default(0) @db.Decimal(10, 2)
   serviceSubtotal Decimal @default(0) @db.Decimal(10, 2)
