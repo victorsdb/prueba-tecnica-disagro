@@ -60,69 +60,75 @@ function RegistrationConfirmation({
                         Servicios seleccionados
                     </h2>
 
-                    <div className="divide-y divide-gray-100">
-                        {services.map((service) => (
-                            <div
-                                key={service.id}
-                                className="flex items-center justify-between py-2 text-sm"
-                            >
-                                <span className="text-gray-700">
-                                    {service.name}
-                                </span>
+                    {services.length > 0 ? (
+                        <>
+                            <div className="divide-y divide-gray-100">
+                                {services.map((service) => (
+                                    <div
+                                        key={service.id}
+                                        className="flex items-center justify-between py-2 text-sm"
+                                    >
+                                        <span className="text-gray-700">
+                                            {service.name}
+                                        </span>
 
-                                <span className="font-medium text-gray-800">
-                                    Q{Number(service.price).toFixed(2)}
-                                </span>
+                                        <span className="font-medium text-gray-800">
+                                            Q{Number(service.price).toFixed(2)}
+                                        </span>
+                                    </div>
+                                ))}
                             </div>
-                        ))}
-                    </div>
 
-                    {/* Resumen servicios */}
-                    <div className="mt-3 space-y-2 border-t border-gray-300 pt-3">
+                            {/* Resumen servicios */}
+                            <div className="mt-3 space-y-2 border-t border-gray-300 pt-3">
+                                <div className="flex items-center justify-between text-sm">
+                                    <span className="text-gray-600">
+                                        Subtotal
+                                    </span>
 
-                        <div className="flex items-center justify-between text-sm">
-                            <span className="text-gray-600">
-                                Subtotal
-                            </span>
+                                    <span className="font-medium text-gray-800">
+                                        Q{Number(registration.serviceSubtotal).toFixed(2)}
+                                    </span>
+                                </div>
 
-                            <span className="font-medium text-gray-800">
-                                Q{Number(registration.serviceSubtotal).toFixed(2)}
-                            </span>
-                        </div>
+                                {Number(registration.serviceDiscountPercent) > 0 ? (
+                                    <div className="flex items-center justify-between text-sm">
+                                        <span className="text-gray-600">
+                                            Descuento {Number(registration.serviceDiscountPercent)}%
+                                        </span>
 
-                        {Number(registration.serviceDiscountPercent) > 0 ? (
-                            <div className="flex items-center justify-between text-sm">
-                                <span className="text-gray-600">
-                                    Descuento {Number(registration.serviceDiscountPercent)}%
-                                </span>
+                                        <span className="font-semibold text-green-600">
+                                            -Q{serviceDiscountAmount.toFixed(2)}
+                                        </span>
+                                    </div>
+                                ) : (
+                                    <div className="flex items-center justify-between text-sm">
+                                        <span className="text-gray-500">
+                                            Descuento
+                                        </span>
 
-                                <span className="font-semibold text-green-600">
-                                    -Q{serviceDiscountAmount.toFixed(2)}
-                                </span>
+                                        <span className="font-medium text-gray-500">
+                                            No aplica
+                                        </span>
+                                    </div>
+                                )}
+
+                                <div className="flex items-center justify-between font-semibold">
+                                    <span className="text-gray-800">
+                                        Total servicios
+                                    </span>
+
+                                    <span className="text-gray-900">
+                                        Q{Number(registration.serviceTotal).toFixed(2)}
+                                    </span>
+                                </div>
                             </div>
-                        ) : (
-                            <div className="flex items-center justify-between text-sm">
-                                <span className="text-gray-500">
-                                    Descuento
-                                </span>
-
-                                <span className="font-medium text-gray-500">
-                                    No aplica
-                                </span>
-                            </div>
-                        )}
-
-                        <div className="flex items-center justify-between font-semibold">
-                            <span className="text-gray-800">
-                                Total servicios
-                            </span>
-
-                            <span className="text-gray-900">
-                                Q{Number(registration.serviceTotal).toFixed(2)}
-                            </span>
-                        </div>
-
-                    </div>
+                        </>
+                    ) : (
+                        <p className="border-t border-gray-200 pt-3 text-sm text-gray-500">
+                            No se seleccionaron servicios.
+                        </p>
+                    )}
                 </div>
 
                 {/* Productos */}
@@ -131,69 +137,75 @@ function RegistrationConfirmation({
                         Productos seleccionados
                     </h2>
 
-                    <div className="divide-y divide-gray-100">
-                        {products.map((product) => (
-                            <div
-                                key={product.id}
-                                className="flex items-center justify-between py-2 text-sm"
-                            >
-                                <span className="text-gray-700">
-                                    {product.name}
-                                </span>
+                    {products.length > 0 ? (
+                        <>
+                            <div className="divide-y divide-gray-100">
+                                {products.map((product) => (
+                                    <div
+                                        key={product.id}
+                                        className="flex items-center justify-between py-2 text-sm"
+                                    >
+                                        <span className="text-gray-700">
+                                            {product.name}
+                                        </span>
 
-                                <span className="font-medium text-gray-800">
-                                    Q{Number(product.price).toFixed(2)}
-                                </span>
+                                        <span className="font-medium text-gray-800">
+                                            Q{Number(product.price).toFixed(2)}
+                                        </span>
+                                    </div>
+                                ))}
                             </div>
-                        ))}
-                    </div>
 
-                    {/* Resumen productos */}
-                    <div className="mt-3 space-y-2 border-t border-gray-300 pt-3">
+                            {/* Resumen productos */}
+                            <div className="mt-3 space-y-2 border-t border-gray-300 pt-3">
+                                <div className="flex items-center justify-between text-sm">
+                                    <span className="text-gray-600">
+                                        Subtotal
+                                    </span>
 
-                        <div className="flex items-center justify-between text-sm">
-                            <span className="text-gray-600">
-                                Subtotal
-                            </span>
+                                    <span className="font-medium text-gray-800">
+                                        Q{Number(registration.productSubtotal).toFixed(2)}
+                                    </span>
+                                </div>
 
-                            <span className="font-medium text-gray-800">
-                                Q{Number(registration.productSubtotal).toFixed(2)}
-                            </span>
-                        </div>
+                                {Number(registration.productDiscountPercent) > 0 ? (
+                                    <div className="flex items-center justify-between text-sm">
+                                        <span className="text-gray-600">
+                                            Descuento {Number(registration.productDiscountPercent)}%
+                                        </span>
 
-                        {Number(registration.productDiscountPercent) > 0 ? (
-                            <div className="flex items-center justify-between text-sm">
-                                <span className="text-gray-600">
-                                    Descuento {Number(registration.productDiscountPercent)}%
-                                </span>
+                                        <span className="font-semibold text-green-600">
+                                            -Q{productDiscountAmount.toFixed(2)}
+                                        </span>
+                                    </div>
+                                ) : (
+                                    <div className="flex items-center justify-between text-sm">
+                                        <span className="text-gray-500">
+                                            Descuento
+                                        </span>
 
-                                <span className="font-semibold text-green-600">
-                                    -Q{productDiscountAmount.toFixed(2)}
-                                </span>
+                                        <span className="font-medium text-gray-500">
+                                            No aplica
+                                        </span>
+                                    </div>
+                                )}
+
+                                <div className="flex items-center justify-between font-semibold">
+                                    <span className="text-gray-800">
+                                        Total productos
+                                    </span>
+
+                                    <span className="text-gray-900">
+                                        Q{Number(registration.productTotal).toFixed(2)}
+                                    </span>
+                                </div>
                             </div>
-                        ) : (
-                            <div className="flex items-center justify-between text-sm">
-                                <span className="text-gray-500">
-                                    Descuento
-                                </span>
-
-                                <span className="font-medium text-gray-500">
-                                    No aplica
-                                </span>
-                            </div>
-                        )}
-
-                        <div className="flex items-center justify-between font-semibold">
-                            <span className="text-gray-800">
-                                Total productos
-                            </span>
-
-                            <span className="text-gray-900">
-                                Q{Number(registration.productTotal).toFixed(2)}
-                            </span>
-                        </div>
-
-                    </div>
+                        </>
+                    ) : (
+                        <p className="border-t border-gray-200 pt-3 text-sm text-gray-500">
+                            No se seleccionaron productos.
+                        </p>
+                    )}
                 </div>
 
                 {/* Total general */}
