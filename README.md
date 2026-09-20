@@ -142,15 +142,23 @@ La sesión almacena temporalmente:
 
 La sesión se gestiona en el backend utilizando `express-session` y se persiste en PostgreSQL mediante `connect-pg-simple`.
 
-```text
-Navegador
-   │
-   │ Cookie HttpOnly
-   ▼
-Backend Express
-   │
-   ▼
-PostgreSQL
+
+Y si quieres que se vea aún más “profesional”, te dejo una versión con subgrupos:
+
+
+```mermaid
+flowchart TD
+    subgraph Cliente
+        A[Navegador]
+    end
+
+    subgraph Servidor
+        B[Backend Express]
+        C[(PostgreSQL)]
+    end
+
+    A -->|Cookie HttpOnly| B
+    B -->|Sesiones / datos| C
 ```
 
 Características principales:
