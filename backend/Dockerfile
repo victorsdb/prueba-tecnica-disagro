@@ -1,4 +1,6 @@
-# Etapa 1: compilar el proyecto
+# ------------------------------
+# Etapa 1: Compilar el proyecto
+# ------------------------------
 FROM node:22-bookworm-slim AS builder
 
 WORKDIR /app
@@ -23,8 +25,9 @@ RUN npx prisma generate --schema=prisma/schema.prisma
 # Compilar TypeScript
 RUN npm run build
 
-
-# Etapa 2: ejecutar el backend
+# ------------------------------
+# Etapa 2: Ejecutar el Backend
+# ------------------------------
 FROM node:22-bookworm-slim AS runner
 
 WORKDIR /app
