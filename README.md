@@ -142,10 +142,6 @@ La sesión almacena temporalmente:
 
 La sesión se gestiona en el backend utilizando `express-session` y se persiste en PostgreSQL mediante `connect-pg-simple`.
 
-
-Y si quieres que se vea aún más “profesional”, te dejo una versión con subgrupos:
-
-
 ```mermaid
 flowchart TD
     subgraph Cliente
