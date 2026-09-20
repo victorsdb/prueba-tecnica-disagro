@@ -2,11 +2,14 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 //import prisma from "./lib/prisma";
+import session from "express-session";
+import connectPgSimple from "connect-pg-simple";
 
 
 import productRoutes from "./routes/product.routes";
 import serviceRoutes from "./routes/service.routes";
 import registrationRoutes from "./routes/registration.routes";
+import sessionRoutes from "./routes/session.routes";
 
 import { errorHandler } from "./middlewares/error.middleware";
 
@@ -14,8 +17,55 @@ const app = express();
 
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
+const SESSION_SECRET = process.env.SESSION_SECRET;
+const DATABASE_URL = process.env.DATABASE_URL;
+const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
+const SESSION_COOKIE_SECURE = process.env.SESSION_COOKIE_SECURE === "true";
+
+if (!SESSION_SECRET) {
+    throw new Error("SESSION_SECRET no está definida");
+}
+
+if (!DATABASE_URL) {
+    throw new Error("DATABASE_URL no está definida");
+}
+
+app.set("trust proxy", 1);
+
+const PgSession = connectPgSimple(session);
+
+app.use(
+    cors({
+        origin: FRONTEND_URL,
+        credentials: true
+    })
+);
+
 app.use(express.json());
+
+app.use(
+    session({
+        store: new PgSession({
+            conString: DATABASE_URL,
+            createTableIfMissing: true
+        }),
+
+        name: "disagro.sid",
+
+        secret: SESSION_SECRET,
+
+        resave: false,
+
+        saveUninitialized: false,
+
+        cookie: {
+            httpOnly: true,
+            secure: SESSION_COOKIE_SECURE,
+            sameSite: "lax",
+            maxAge: 1000 * 60 * 60 * 2
+        }
+    })
+);
 
 app.get("/api/health", (_req, res) => {
     res.json({
@@ -26,6 +76,7 @@ app.get("/api/health", (_req, res) => {
 app.use("/api/products", productRoutes);
 app.use("/api/services", serviceRoutes);
 app.use("/api/registrations", registrationRoutes);
+app.use("/api/session", sessionRoutes);
 
 // Ruta no encontrada
 app.use((_req, res) => {

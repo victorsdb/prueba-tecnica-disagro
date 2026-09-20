@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import Header from '../components/Header';
 import Stepper from '../components/Stepper';
@@ -6,13 +6,16 @@ import CustomerForm from '../components/CustomerForm';
 import ProductServiceSelection from '../components/ProductServiceSelection';
 import RegistrationConfirmation from '../components/RegistrationConfirmation';
 
-
 import { createRegistration } from '../services/registrationService';
+import {
+    clearSession,
+    getSession,
+    saveSession
+} from '../services/sessionService';
 
 import type { CustomerInfo } from '../types/attendance';
 import type { Product, Service } from '../types/catalog';
 import type { RegistrationResponse } from '../types/registration';
-
 
 function AttendancePage() {
     const [currentStep, setCurrentStep] = useState(1);
@@ -33,10 +36,84 @@ function AttendancePage() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [registration, setRegistration] = useState<RegistrationResponse | null>(null);
 
+    const [isSessionLoaded, setIsSessionLoaded] = useState(false);
+
     const steps = [
         'Ingrese su información',
         'Seleccione servicios y productos de su interés'
     ];
+
+    useEffect(() => {
+        const loadSession = async () => {
+            try {
+                const draft = await getSession();
+
+                if (draft) {
+                    setCurrentStep(draft.currentStep ?? 1);
+
+                    setCustomerInfo({
+                        firstName: draft.firstName ?? '',
+                        lastName: draft.lastName ?? '',
+                        email: draft.email ?? '',
+                        attendanceDate: draft.attendanceAt ?? '',
+                    });
+
+                    setSelectedProductIds(draft.productIds ?? []);
+                    setSelectedServiceIds(draft.serviceIds ?? []);
+                }
+            } catch (error) {
+                console.error('No se pudo recuperar la sesión:', error);
+            } finally {
+                setIsSessionLoaded(true);
+            }
+        };
+
+        loadSession();
+    }, []);
+
+    useEffect(() => {
+        if (!isSessionLoaded || registration) {
+            return;
+        }
+
+        const hasData =
+            customerInfo.firstName.trim() !== '' ||
+            customerInfo.lastName.trim() !== '' ||
+            customerInfo.email.trim() !== '' ||
+            customerInfo.attendanceDate !== '' ||
+            selectedProductIds.length > 0 ||
+            selectedServiceIds.length > 0 ||
+            currentStep !== 1;
+
+        if (!hasData) {
+            return;
+        }
+
+        const timeoutId = window.setTimeout(() => {
+            saveSession({
+                currentStep,
+                firstName: customerInfo.firstName,
+                lastName: customerInfo.lastName,
+                email: customerInfo.email,
+                attendanceAt: customerInfo.attendanceDate,
+                productIds: selectedProductIds,
+                serviceIds: selectedServiceIds,
+            }).catch((error) => {
+                console.error('No se pudo guardar la sesión:', error);
+            });
+        }, 500);
+
+        return () => {
+            window.clearTimeout(timeoutId);
+        };
+    }, [
+        currentStep,
+        customerInfo,
+        selectedProductIds,
+        selectedServiceIds,
+        isSessionLoaded,
+        registration
+    ]);
 
     const goNext = () => {
         setCurrentStep(2);
@@ -84,9 +161,14 @@ function AttendancePage() {
                 serviceIds: selectedServiceIds,
             });
 
+            try {
+                await clearSession();
+            } catch (error) {
+                console.error('No se pudo limpiar la sesión:', error);
+            }
+
             setConfirmedProducts(products);
             setConfirmedServices(services);
-
             setRegistration(createdRegistration);
 
             console.log('Registro creado:', createdRegistration);
@@ -116,6 +198,8 @@ function AttendancePage() {
 
         setRegistration(null);
     };
+
+
 
     return (
         <>
