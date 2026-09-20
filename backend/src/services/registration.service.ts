@@ -1,5 +1,6 @@
 import prisma from "../lib/prisma";
 import { AppError } from "../errors/app.error";
+import { sendRegistrationConfirmation } from "./email.service";
 
 export const createRegistration = async (data: {
     name: string;
@@ -96,6 +97,7 @@ export const createRegistration = async (data: {
     const grandTotal = Number(
         (productTotal + serviceTotal).toFixed(2)
     );
+
     const registrationId = await prisma.$transaction(async (tx) => {
         const customer = await tx.customer.upsert({
             where: {
@@ -166,6 +168,51 @@ export const createRegistration = async (data: {
             }
         }
     });
+
+    if (!registration) {
+        throw new AppError(
+            500,
+            "No fue posible recuperar el registro creado"
+        );
+    }
+
+    // El registro ya fue almacenado correctamente.
+    // Un fallo en el envío del correo no debe deshacer la inscripción.
+    try {
+        await sendRegistrationConfirmation({
+            email: registration.customer.email,
+            name: registration.customer.name,
+            attendanceAt: registration.attendanceAt,
+
+            products: registration.products.map((item) => ({
+                name: item.product.name,
+                price: Number(item.unitPrice)
+            })),
+
+            services: registration.services.map((item) => ({
+                name: item.service.name,
+                price: Number(item.unitPrice)
+            })),
+
+            productSubtotal,
+            productDiscount,
+
+            serviceSubtotal,
+            serviceDiscount,
+
+            grandTotal
+        });
+
+        console.log(
+            `Correo de confirmación enviado a ${registration.customer.email}`
+        );
+        
+    } catch (error) {
+        console.error(
+            `No fue posible enviar el correo de confirmación a ${registration.customer.email}`,
+            error
+        );
+    }
 
     return registration;
 
