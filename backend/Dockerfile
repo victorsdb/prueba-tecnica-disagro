@@ -13,7 +13,7 @@ COPY package*.json ./
 RUN npm ci
 
 COPY prisma ./prisma
-COPY prisma.config.ts ./
+COPY prisma7.config.ts ./
 COPY tsconfig.json ./
 COPY src ./src
 
@@ -45,7 +45,7 @@ COPY --from=builder /app/dist ./dist
 
 # Archivos requeridos por Prisma y el seed
 COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
+COPY --from=builder /app/prisma7.config.ts ./prisma7.config.ts
 COPY --from=builder /app/src ./src
 COPY --from=builder /app/generated ./generated
 
