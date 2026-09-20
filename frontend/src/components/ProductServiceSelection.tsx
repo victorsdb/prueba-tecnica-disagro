@@ -398,6 +398,7 @@ function ProductServiceSelection({
                         </div>
                     </div>
 
+                    {/* Resumen de Descuentos */}
                     <div className="grid w-full gap-4 bg-zinc-700 p-5 text-white sm:grid-cols-2">
 
                         <div className="space-y-1 sm:pr-6">

@@ -171,8 +171,6 @@ function AttendancePage() {
             setConfirmedServices(services);
             setRegistration(createdRegistration);
 
-            console.log('Registro creado:', createdRegistration);
-
         } catch (error) {
             console.error('Error al confirmar asistencia:', error);
         } finally {
