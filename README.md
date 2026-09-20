@@ -74,7 +74,7 @@ Las reglas de negocio definidas para la prueba fueron implementadas en el backen
 | Condición | Descuento |
 |---|---:|
 | Menos de 2 servicios | 0% |
-| 2 o más servicios | 3% |
+| 2 o más servicios y subtotal hasta Q1,500 | 3% |
 | 2 o más servicios y subtotal mayor a Q1,500 | 5% |
 
 ### Productos
