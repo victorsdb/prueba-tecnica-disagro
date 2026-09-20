@@ -178,41 +178,41 @@ export const createRegistration = async (data: {
 
     // El registro ya fue almacenado correctamente.
     // Un fallo en el envío del correo no debe deshacer la inscripción.
-    try {
-        await sendRegistrationConfirmation({
-            email: registration.customer.email,
-            name: registration.customer.name,
-            attendanceAt: registration.attendanceAt,
+    void sendRegistrationConfirmation({
+        email: registration.customer.email,
+        name: registration.customer.name,
+        attendanceAt: registration.attendanceAt,
 
-            products: registration.products.map((item) => ({
-                name: item.product.name,
-                price: Number(item.unitPrice)
-            })),
+        products: registration.products.map((item) => ({
+            name: item.product.name,
+            price: Number(item.unitPrice)
+        })),
 
-            services: registration.services.map((item) => ({
-                name: item.service.name,
-                price: Number(item.unitPrice)
-            })),
+        services: registration.services.map((item) => ({
+            name: item.service.name,
+            price: Number(item.unitPrice)
+        })),
 
-            productSubtotal,
-            productDiscount,
+        productSubtotal,
+        productDiscount,
 
-            serviceSubtotal,
-            serviceDiscount,
+        serviceSubtotal,
+        serviceDiscount,
 
-            grandTotal
+        grandTotal
+    })
+        .then(() => {
+            console.log(
+                `Correo de confirmación enviado a ${registration.customer.email}`
+            );
+        })
+        .catch((error) => {
+            console.error(
+                `No fue posible enviar el correo de confirmación a ${registration.customer.email}`,
+                error
+            );
         });
 
-        console.log(
-            `Correo de confirmación enviado a ${registration.customer.email}`
-        );
-        
-    } catch (error) {
-        console.error(
-            `No fue posible enviar el correo de confirmación a ${registration.customer.email}`,
-            error
-        );
-    }
 
     return registration;
 
