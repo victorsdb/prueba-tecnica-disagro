@@ -858,7 +858,7 @@ La solución fue probada después de su despliegue en Railway, verificando:
 - Persistencia de sesiones.
 - Registro de inscripciones.
 - Envío de correo de confirmación.
-- Recuperación del backend después de nuevos despliegues mediante resolución DNS dinámica.
+- Continuidad de la comunicación con el backend después de nuevos despliegues mediante resolución DNS dinámica.
 
 ## Mejoras futuras
 
